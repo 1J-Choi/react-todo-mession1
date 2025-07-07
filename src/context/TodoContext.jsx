@@ -62,7 +62,7 @@ export function TodoProvider({ children }) {
         const nowTodos = todos.map(
             (todo) =>
                 todo.id === id
-                    ? { ...todo, modify: !todo.modify, editText: todo.text } // 해당 항목만 수정
+                    ? { ...todo, modify: !todo.modify } // 해당 항목만 수정
                     : { ...todo, modify: false }, // 나머지 항목은 수정 모드 해제
         )
         setTodos(nowTodos)
@@ -82,14 +82,8 @@ export function TodoProvider({ children }) {
             return
         }
         const nowTodos = todos.map((todo) =>
-            todo.id === id ? { ...todo, text: newText, modify: false, editText: '' } : { ...todo, modify: false },
+            todo.id === id ? { ...todo, text: newText, modify: false } : { ...todo, modify: false },
         )
-        setTodos(nowTodos)
-        setItem('todos', nowTodos)
-    }
-
-    const cancelModifyAll = () => {
-        const nowTodos = todos.map((todo) => ({ ...todo, modify: false }))
         setTodos(nowTodos)
         setItem('todos', nowTodos)
     }
@@ -104,7 +98,6 @@ export function TodoProvider({ children }) {
         getFilteredTodos,
         toggleModify,
         modifyTodo,
-        cancelModifyAll,
     }
 
     return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>
