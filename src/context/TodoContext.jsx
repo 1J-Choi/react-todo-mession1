@@ -1,11 +1,12 @@
 import { createContext, useContext, useRef, useState } from 'react'
+import { getItem, setItem } from '../storage.jsx'
 
 const TodoContext = createContext()
 
 export function TodoProvider({ children }) {
-    const lastIdRef = useRef(0)
+    const lastId = parseInt(localStorage.getItem('lastId') || '0')
     const [filterType, setFilterType] = useState('all')
-    const [todos, setTodos] = useState([])
+    const [todos, setTodos] = useState(() => getItem('todos', []))
 
     const addTodo = (inputText) => {
         const newText = inputText.trim()
@@ -17,23 +18,29 @@ export function TodoProvider({ children }) {
             alert('이미 등록된 todo 입니다.')
             return
         }
-        const todoId = lastIdRef.current + 1
+        const todoId = lastId + 1
         const form = {
             id: todoId,
             text: newText,
             checked: false,
             modify: false,
         }
-        lastIdRef.current = todoId
-        setTodos([form, ...todos])
+        localStorage.setItem('lastId', todoId)
+        const nowTodos = [form, ...todos]
+        setTodos(nowTodos)
+        setItem('todos', nowTodos)
     }
 
     const removeTodo = (id) => {
-        setTodos(todos.filter((todo) => id !== todo.id))
+        const nowTodos = todos.filter((todo) => id !== todo.id)
+        setTodos(nowTodos)
+        setItem('todos', nowTodos)
     }
 
     const toggleTodo = (id) => {
-        setTodos(todos.map((todo) => (id === todo.id ? { ...todo, checked: !todo.checked } : todo)))
+        const nowTodos = todos.map((todo) => (id === todo.id ? { ...todo, checked: !todo.checked } : todo))
+        setTodos(nowTodos)
+        setItem('todos', nowTodos)
     }
 
     const selectFilter = (e) => {
@@ -52,11 +59,14 @@ export function TodoProvider({ children }) {
     }
 
     const toggleModify = (id) => {
-        setTodos(
-            todos.map((todo) =>
-                todo.id === id ? { ...todo, modify: true, editText: todo.text } : { ...todo, modify: false },
-            ),
+        const nowTodos = todos.map(
+            (todo) =>
+                todo.id === id
+                    ? { ...todo, modify: !todo.modify, editText: todo.text } // 해당 항목만 수정
+                    : { ...todo, modify: false }, // 나머지 항목은 수정 모드 해제
         )
+        setTodos(nowTodos)
+        setItem('todos', nowTodos)
     }
 
     const modifyTodo = (id, newText) => {
@@ -71,15 +81,17 @@ export function TodoProvider({ children }) {
             setTodos(todos.map((todo) => ({ ...todo, modify: false })))
             return
         }
-        setTodos(
-            todos.map((todo) =>
-                todo.id === id ? { ...todo, text: newText, modify: false, editText: '' } : { ...todo, modify: false },
-            ),
+        const nowTodos = todos.map((todo) =>
+            todo.id === id ? { ...todo, text: newText, modify: false, editText: '' } : { ...todo, modify: false },
         )
+        setTodos(nowTodos)
+        setItem('todos', nowTodos)
     }
 
     const cancelModifyAll = () => {
-        setTodos(todos.map((todo) => ({ ...todo, modify: false })))
+        const nowTodos = todos.map((todo) => ({ ...todo, modify: false }))
+        setTodos(nowTodos)
+        setItem('todos', nowTodos)
     }
 
     const value = {
