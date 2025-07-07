@@ -1,7 +1,7 @@
 function TodoListItem({ todo, onToggle, onRemove, onToggleModify, onModifySubmit }) {
     return (
         <li key={todo.id} style={{ display: 'flex' }}>
-            <input type="checkbox" checked={todo.checked} onChange={() => onToggle(todo.id)} />
+            <input type="checkbox" checked={todo.completed} onChange={() => onToggle(todo.id)} />
             {todo.text}
             <button onClick={() => onRemove(todo.id)}>X</button>
             <button onClick={() => onToggleModify(todo.id)}>수정</button>

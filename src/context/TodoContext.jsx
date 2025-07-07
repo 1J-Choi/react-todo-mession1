@@ -22,7 +22,7 @@ export function TodoProvider({ children }) {
         const form = {
             id: todoId,
             text: newText,
-            checked: false,
+            completed: false,
             modify: false,
         }
         localStorage.setItem('lastId', todoId)
@@ -38,7 +38,7 @@ export function TodoProvider({ children }) {
     }
 
     const toggleTodo = (id) => {
-        const nowTodos = todos.map((todo) => (id === todo.id ? { ...todo, checked: !todo.checked } : todo))
+        const nowTodos = todos.map((todo) => (id === todo.id ? { ...todo, completed: !todo.completed } : todo))
         setTodos(nowTodos)
         setItem('todos', nowTodos)
     }
@@ -50,9 +50,9 @@ export function TodoProvider({ children }) {
     const getFilteredTodos = () => {
         switch (filterType) {
             case 'active':
-                return todos.filter((todo) => !todo.checked)
+                return todos.filter((todo) => !todo.completed)
             case 'completed':
-                return todos.filter((todo) => todo.checked)
+                return todos.filter((todo) => todo.completed)
             default:
                 return todos
         }
