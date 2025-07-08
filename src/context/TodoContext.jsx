@@ -102,8 +102,10 @@ export function TodoProvider({ children }) {
 
     return (
         <TodoContext.Provider value={value}>
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
-                <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">{children}</div>
+            <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-2">
+                <div className="w-full max-w-2xl sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl bg-white rounded-lg shadow-lg p-4 sm:p-6 flex flex-col gap-6">
+                    {children}
+                </div>
             </div>
         </TodoContext.Provider>
     )
