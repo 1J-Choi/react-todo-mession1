@@ -100,7 +100,13 @@ export function TodoProvider({ children }) {
         modifyTodo,
     }
 
-    return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>
+    return (
+        <TodoContext.Provider value={value}>
+            <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
+                <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">{children}</div>
+            </div>
+        </TodoContext.Provider>
+    )
 }
 
 export function useTodos() {
